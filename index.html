@@ -22,22 +22,25 @@
 
     <section>
       <form action="" class="flex flex-col justify-center items-center gap-3 font-serif">
-        <input type="text" class="h-10 w-96 border-2 border-blue-200 rounded-lg hover:border-blue-700 hover:border-4" placeholder="Add a new task in todo" required>
-        <input type="submit" class="bg-blue-600 text-white h-8 w-20 rounded-md">
+        <input id="userId" type="text" class="h-10 w-96 border-2 border-blue-200 rounded-lg hover:border-blue-700 hover:border-4" placeholder="Give the UserId" required>
+        <input id="userIdBtn" type="submit" class="bg-blue-600 text-white h-8 w-20 rounded-md">
+
+        <input id="currentTodo" type="text" class="h-10 w-96 border-2 border-blue-200 rounded-lg hover:border-blue-700 hover:border-4" placeholder="Add a new task in todo" required>
+        <input id="currentTodoBtn" type="submit" class="bg-blue-600 text-white h-8 w-20 rounded-md">
       </form>
     </section>
     <br>
     <br>
     <section class="flex justify-center min-h-screen">
       <div class="container">
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid max-md:grid-cols-1 grid-cols-3 gap-4">
           <!--col1-->
-          <div class="rounded shadow-lg bg-white">
+          <div id="toDo" class="rounded shadow-lg bg-white">
             <div class="bg-sky-200 rounded-t p-4">
               <h1 class="text-2xl font-bold"> To Do</h1>
             </div>
             <!--rows-->
-            <div class="flex justify-between m-2">
+            <!-- <div class="flex justify-between m-2">
               <div class="flex gap-2 px-1 font-medium">
                 <input type="checkbox" name="" id="">
                 <h1>Finish Report For Clint</h1>
@@ -49,18 +52,17 @@
                     </svg>
                 </button>
               </div>
-            </div>
+            </div> -->
           </div>
           <!--col2-->
-          <div class="rounded shadow-lg bg-white">
+          <div id="inProgress" class="rounded shadow-lg bg-white">
             <div class="bg-sky-300 rounded-t p-4">
               <h1 class="text-2xl font-bold"> In Progress</h1>
             </div>
             <!--rows-->
-            
           </div>
           <!--col3-->
-          <div class="rounded shadow-lg bg-white">
+          <div id="completed" class="rounded shadow-lg bg-white">
             <div class="bg-sky-400 rounded-t p-4">
               <h1 class="text-2xl font-bold"> Completed </h1>
             </div>
