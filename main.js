@@ -13,6 +13,7 @@ async function randerTodos(userId){
     const response = await fetch(url);
     const data = await response.json();
     toDo.innerHTML=``;
+    
     for(let i=0;i<data.length;i++){
         const div=document.createElement("div");
         div.innerHTML=`<div class="flex justify-between m-2">
