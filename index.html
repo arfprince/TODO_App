@@ -13,20 +13,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Poetsen+One&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
   </head>
   <body class="bg-blue-900">
+    <p class="hidden border-red-400"></p>
+
     <section>
       <header class="m-10 gap-3 flex flex-col justify-center items-center text-white font-poetsen_one">
         <h1 class="text-4xl font-extrabold">Task Manager</h1>
         <p class="text-xl font-medium">Stay Organised and productive with our intuitive to-do app</p>
       </header>
     </section>
-
     <section>
       <form action="" class="flex flex-col justify-center items-center gap-3 font-serif">
-        <input id="userId" type="text" class="h-10 w-96 border-2 border-blue-200 rounded-lg hover:border-blue-700 hover:border-4" placeholder="Give the UserId" required>
-        <input id="userIdBtn" type="submit" class="bg-blue-600 text-white h-8 w-20 rounded-md">
-
-        <input id="currentTodo" type="text" class="h-10 w-96 border-2 border-blue-200 rounded-lg hover:border-blue-700 hover:border-4" placeholder="Add a new task in todo" required>
-        <input id="currentTodoBtn" type="submit" class="bg-blue-600 text-white h-8 w-20 rounded-md">
+        <input id="userId" type="text" class="h-10 w-96 rounded-lg hover:border-blue-700 hover:border-4" placeholder="Give the UserId" required>
+        <input id="userIdBtn" type="submit" class="bg-blue-600 text-white h-8 w-20 hover:border-blue-100 hover:border-2 rounded-md">
+        <p id="userIdErrorMessage" class="hidden text-red-400 text-xl"> You should give an UserId</p>
+        <input id="currentTodo" type="text" class="h-10 w-96 rounded-lg hover:border-blue-700 hover:border-4 hidden" placeholder="Add a new task in todo " required>
+        <input id="currentTodoBtn" type="submit" class="bg-blue-600 text-white h-8 w-20 hover:border-blue-100 hover:border-2 rounded-md hidden">
+        <p id="currentTodoErrorMessage" class="hidden text-red-400 text-xl"></p>
       </form>
     </section>
     <br>
@@ -35,7 +37,7 @@
       <div class="container">
         <div class="grid max-md:grid-cols-1 grid-cols-3 gap-4">
           <!--col1-->
-          <div id="toDo" class="rounded shadow-lg bg-white">
+          <div id="toDo" class="rounded shadow-lg shadow-slate-700 bg-white">
             <div class="bg-sky-200 rounded-t p-4">
               <h1 class="text-2xl font-bold"> To Do</h1>
             </div>
@@ -55,14 +57,14 @@
             </div> -->
           </div>
           <!--col2-->
-          <div id="inProgress" class="rounded shadow-lg bg-white">
+          <div id="inProgress" class="rounded shadow-lg shadow-slate-700 bg-white">
             <div class="bg-sky-300 rounded-t p-4">
               <h1 class="text-2xl font-bold"> In Progress</h1>
             </div>
             <!--rows-->
           </div>
           <!--col3-->
-          <div id="completed" class="rounded shadow-lg bg-white">
+          <div id="completed" class="rounded shadow-lg shadow-slate-700 bg-white">
             <div class="bg-sky-400 rounded-t p-4">
               <h1 class="text-2xl font-bold"> Completed </h1>
             </div>
