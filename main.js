@@ -14,21 +14,70 @@ async function getData() {
     const data=await response.json();
     return data;
 }
-async function deleteTodo(todoId,userId) {
+async function deleteTodo(userId,todoId) {
     const url=`${baseUrl}/${userId}/todos/${todoId}`;
     try {
         const response = await fetch(url,{
             method: "DELETE",
         }); 
+
         randerTodos(userId);
+        randerInProgress(userId,0);
+        randerComplete(userId,0);
     } catch (error) {
         console.log("errr",error);
     }
 }
+async function randerComplete(userId,inProgressId) {
+    
+    if(inProgressId)
+    {
+        let url =`${baseUrl}/${userId}/todos/${inProgressId}`;
+        try {
+            const response = await fetch(url,{
+                method: "PUT",
+                body: JSON.stringify({
+                    status : "Completed",
+                }),
+            });
+            randerInProgress(userId,0);
+        } catch (error) {
+            console.log("errrr",error);
+        }
+    }
+    const data = await getData();
+    completed.innerHTML=``;
+    for(let i=0;i<data.length;i++)
+    {
+        if(data[i].status==="Completed") 
+        {
+            const div=document.createElement("div");
+            div.innerHTML=`<div class="flex justify-between m-2">
+            <div class="flex gap-2 px-1 font-medium">
+            <h1>${data[i].title}</h1>
+            </div>
+            <div class="deleteDiv">
+            </div>
+            </div>`;
+            const deleteDiv=div.querySelector(".deleteDiv");
+            deleteDiv.innerHTML=`<button id="deleteCompleted" value="${data[i].id}" class="p-2 hover:bg-red-400 rounded-sm">
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="800px" width="800px" version="1.1" id="Capa_1" viewBox="0 0 490 490" xml:space="preserve">
+            <polygon points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490   489.292,457.678 277.331,245.004 489.292,32.337 "/>
+            </svg>
+        </button>`;
 
-async function randerInProgress(todoId,userId) {
+            const button=deleteDiv.querySelector("#deleteCompleted");
+            button.addEventListener("click",()=>{
+                deleteTodo(userId,button.value);
+            });
+            completed.appendChild(div);
+        }
+    }
+}
 
-    if(userId)
+async function randerInProgress(userId,todoId) {
+    
+    if(todoId)
     {
         let url =`${baseUrl}/${userId}/todos/${todoId}`;
         try {
@@ -57,23 +106,23 @@ async function randerInProgress(todoId,userId) {
             </div>
             <div class="deleteDiv">
             </div>
-        </div>`;
+            </div>`;
             const deleteDiv=div.querySelector(".deleteDiv");
-            deleteDiv.innerHTML=`<button id="deleteTodo" value="${data[i].id}" class="p-2 hover:bg-red-400 rounded-sm">
+            deleteDiv.innerHTML=`<button id="deleteInProgress" value="${data[i].id}" class="p-2 hover:bg-red-400 rounded-sm">
             <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="800px" width="800px" version="1.1" id="Capa_1" viewBox="0 0 490 490" xml:space="preserve">
             <polygon points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490   489.292,457.678 277.331,245.004 489.292,32.337 "/>
             </svg>
         </button>`;
 
-            const button=deleteDiv.querySelector("#deleteTodo");
+            const button=deleteDiv.querySelector("#deleteInProgress");
             button.addEventListener("click",()=>{
-                deleteTodo(button.value, userId);
+                deleteTodo(userId,button.value);
             });
 
             const checkbox = div.querySelector("input[name=checkbox]");
             checkbox.addEventListener('change', function() {
                 if(this.checked){
-                    // randerInProgress(checkbox.value,userId);
+                    randerComplete(userId, checkbox.value);
                 }
             });
             inProgress.appendChild(div);
@@ -82,12 +131,12 @@ async function randerInProgress(todoId,userId) {
 }
 
 async function randerTodos(userId){
-    const url =`${baseUrl}/${userId}/todos`;
-    const response = await fetch(url);
-    const data = await response.json();
-    toDo.innerHTML=``;
     
-    for(let i=0;i<data.length;i++){
+    const data = await getData();
+    
+    toDo.innerHTML=``;
+    for(let i=0;i<data.length;i++)
+    {
         if(data[i].status!=="todo") continue;
         const div=document.createElement("div");
         div.innerHTML=`<div class="flex justify-between m-2">
@@ -107,13 +156,13 @@ async function randerTodos(userId){
 
         const button=deleteDiv.querySelector("#deleteTodo");
         button.addEventListener("click",()=>{
-            deleteTodo(button.value, userId);
+            deleteTodo(userId,button.value);
         });
 
         const checkbox = div.querySelector("input[name=checkbox]");
         checkbox.addEventListener('change', function() {
             if(this.checked){
-                randerInProgress(checkbox.value,userId);
+                randerInProgress(userId,checkbox.value);
             }
         });
 
@@ -136,6 +185,7 @@ userIdBtn.addEventListener("click", async (e)=>{
         const data=getData();
         randerTodos(userId);
         randerInProgress(userId,0);
+        randerComplete(userId,0);
     } catch (error) {
         console.log("errrr",error);
     }
