@@ -8,6 +8,12 @@ const addTodoInput=document.querySelector("#currentTodo");
 const addTodoBtn=document.querySelector("#currentTodoBtn");
 const baseUrl="https://todo-crudl.deno.dev";
 
+async function getData() {
+    const url=`${baseUrl}/${userId}/todos`;
+    const response = await fetch(url);
+    const data=await response.json();
+    return data;
+}
 async function deleteTodo(todoId,userId) {
     const url=`${baseUrl}/${userId}/todos/${todoId}`;
     try {
@@ -22,26 +28,57 @@ async function deleteTodo(todoId,userId) {
 
 async function randerInProgress(todoId,userId) {
 
-    let url =`${baseUrl}/${userId}/todos/${todoId}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    const title=data.title;
-    deleteTodo(todoId,userId);
-
-    url=`${baseUrl}/${userId}/todos`;
-    try {
-        const response = await fetch(url,{
-            method: "POST",
-            body: JSON.stringify({
-                title: `${title}`,
-                status : "In Progress",
-            }),
-        });
-        console.log(response.ok);
-    } catch (error) {
-        console.log("errrr",error);
+    if(userId)
+    {
+        let url =`${baseUrl}/${userId}/todos/${todoId}`;
+        try {
+            const response = await fetch(url,{
+                method: "PUT",
+                body: JSON.stringify({
+                    status : "In Progress",
+                }),
+            });
+            randerTodos(userId);
+        } catch (error) {
+            console.log("errrr",error);
+        }
     }
+    const data = await getData();
     inProgress.innerHTML=``;
+    for(let i=0;i<data.length;i++)
+    {
+        if(data[i].status==="In Progress") 
+        {
+            const div=document.createElement("div");
+            div.innerHTML=`<div class="flex justify-between m-2">
+            <div class="flex gap-2 px-1 font-medium">
+            <input type="checkbox" name="checkbox" value="${data[i].id}">
+            <h1>${data[i].title}</h1>
+            </div>
+            <div class="deleteDiv">
+            </div>
+        </div>`;
+            const deleteDiv=div.querySelector(".deleteDiv");
+            deleteDiv.innerHTML=`<button id="deleteTodo" value="${data[i].id}" class="p-2 hover:bg-red-400 rounded-sm">
+            <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="800px" width="800px" version="1.1" id="Capa_1" viewBox="0 0 490 490" xml:space="preserve">
+            <polygon points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490   489.292,457.678 277.331,245.004 489.292,32.337 "/>
+            </svg>
+        </button>`;
+
+            const button=deleteDiv.querySelector("#deleteTodo");
+            button.addEventListener("click",()=>{
+                deleteTodo(button.value, userId);
+            });
+
+            const checkbox = div.querySelector("input[name=checkbox]");
+            checkbox.addEventListener('change', function() {
+                if(this.checked){
+                    // randerInProgress(checkbox.value,userId);
+                }
+            });
+            inProgress.appendChild(div);
+        }
+    }
 }
 
 async function randerTodos(userId){
@@ -96,10 +133,9 @@ userIdBtn.addEventListener("click", async (e)=>{
         p.classList.add("hidden");
     }
     try {
-        const url=`${baseUrl}/${userId}/todos`;
-        const response = await fetch(url);
-        const data=await response.json();
+        const data=getData();
         randerTodos(userId);
+        randerInProgress(userId,0);
     } catch (error) {
         console.log("errrr",error);
     }
