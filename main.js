@@ -26,7 +26,6 @@ async function randerInProgress(todoId,userId) {
     const response = await fetch(url);
     const data = await response.json();
     const title=data.title;
-    console.log(title);
     deleteTodo(todoId,userId);
 
     url=`${baseUrl}/${userId}/todos`;
@@ -34,11 +33,11 @@ async function randerInProgress(todoId,userId) {
         const response = await fetch(url,{
             method: "POST",
             body: JSON.stringify({
-                title,
+                title: `${title}`,
                 status : "In Progress",
             }),
         });
-        console.log(response.status);
+        console.log(response.ok);
     } catch (error) {
         console.log("errrr",error);
     }
